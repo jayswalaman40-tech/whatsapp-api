@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  whatsapp-api:
+    build: .
+    container_name: whatsapp-api
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persist database and WhatsApp sessions across container restarts
+      - ./data:/app/data
+      - ./sessions:/app/sessions
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=${JWT_SECRET:-change-this-secret-in-production}
+      - DATABASE_PATH=/app/data/whatsapp.db
+      - SESSION_PATH=/app/sessions
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-changeme123}
+      - RATE_LIMIT_WINDOW_MS=60000
+      - RATE_LIMIT_MAX=100
+      - CORS_ORIGINS=*
+    restart: unless-stopped
+    # Required for Chromium to work in Docker
+    cap_add:
+      - SYS_ADMIN
+    # Security options for Chromium sandbox
+    security_opt:
+      - seccomp=unconfined

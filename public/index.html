@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="WhatsApp Web API Dashboard — Manage WhatsApp instances, send messages, and integrate with your apps.">
+  <title>WhatsApp API Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📱</text></svg>">
+</head>
+<body>
+
+  <!-- ============================== -->
+  <!-- Navigation Bar                 -->
+  <!-- ============================== -->
+  <nav class="app-nav" id="app-nav">
+    <div class="nav-brand">
+      <div class="nav-brand-icon">📱</div>
+      <span>WhatsApp API</span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="#/dashboard" class="nav-link">📊 Dashboard</a></li>
+      <li><a href="#/api-keys" class="nav-link">🔑 API Keys</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <div class="user-badge">
+        <div class="user-avatar">👤</div>
+        <span id="user-display">Admin</span>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- ============================== -->
+  <!-- Login Page                     -->
+  <!-- ============================== -->
+  <div class="page" id="page-login">
+    <div class="login-wrapper">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="login-logo">📱</div>
+          <h1>WhatsApp API</h1>
+          <p>Sign in to manage your instances</p>
+        </div>
+
+        <form onsubmit="handleLogin(event)" id="login-form">
+          <div class="form-group">
+            <label class="form-label" for="login-username">Username</label>
+            <input
+              type="text"
+              id="login-username"
+              name="username"
+              class="form-input"
+              placeholder="Enter your username"
+              autocomplete="username"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <input
+              type="password"
+              id="login-password"
+              name="password"
+              class="form-input"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" id="login-btn">
+            <span class="btn-icon">🔑</span> Login
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== -->
+  <!-- Dashboard Page                 -->
+  <!-- ============================== -->
+  <div class="page" id="page-dashboard">
+    <div class="page-content">
+      <div class="dashboard-header">
+        <h2>📊 <span>Instances</span></h2>
+        <form class="create-form" onsubmit="handleCreateInstance(event)">
+          <input
+            type="text"
+            id="new-instance-name"
+            class="form-input"
+            placeholder="Instance name (e.g., My Business)"
+            required
+          >
+          <button type="submit" class="btn btn-primary">
+            <span class="btn-icon">➕</span> Create Instance
+          </button>
+        </form>
+      </div>
+
+      <div class="instances-grid" id="instances-list">
+        <div class="loading-state">
+          <span class="spinner"></span> Loading instances...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== -->
+  <!-- API Keys Page                  -->
+  <!-- ============================== -->
+  <div class="page" id="page-apikeys">
+    <div class="page-content">
+      <div class="dashboard-header">
+        <h2>🔑 <span>API Keys</span></h2>
+        <form class="create-form" onsubmit="handleCreateApiKey(event)">
+          <input
+            type="text"
+            id="new-apikey-name"
+            class="form-input"
+            placeholder="Key name (e.g., Mobile App)"
+            required
+          >
+          <button type="submit" class="btn btn-primary">
+            <span class="btn-icon">🔑</span> Generate Key
+          </button>
+        </form>
+      </div>
+
+      <div id="apikeys-list">
+        <div class="loading-state">
+          <span class="spinner"></span> Loading API keys...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== -->
+  <!-- QR Code Modal                  -->
+  <!-- ============================== -->
+  <div class="modal-overlay" id="qr-modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeQrModal()">×</button>
+      <h2 class="modal-title">📱 Scan QR Code</h2>
+      <p class="modal-subtitle">Connect your WhatsApp account</p>
+
+      <div class="qr-container">
+        <img id="qr-image" alt="QR Code" style="display:none;">
+      </div>
+
+      <p class="qr-status" id="qr-status">Waiting for QR code...</p>
+
+      <div class="qr-instructions">
+        <ol>
+          <li>Open <strong>WhatsApp</strong> on your phone</li>
+          <li>Tap <strong>Menu ⋮</strong> → <strong>Linked Devices</strong></li>
+          <li>Tap <strong>Link a Device</strong></li>
+          <li>Point your phone camera at this QR code</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== -->
+  <!-- Toast Notifications Container  -->
+  <!-- ============================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ============================== -->
+  <!-- Scripts                        -->
+  <!-- ============================== -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+
+</body>
+</html>
